@@ -1,10 +1,11 @@
 #include <gtk/gtk.h>
+#include <gtksourceview/gtksource.h>
 
 static GtkWidget* window_new(GtkApplication* app, gpointer data) {
 	GtkWidget* window;
 	GtkWidget* vbox;
-	GtkWidget* text_view;
-	GtkTextBuffer* buffer;
+	GtkWidget* source_view;
+	GtkSourceBuffer* buffer;
 
 	window = gtk_application_window_new(app);
 
@@ -14,11 +15,11 @@ static GtkWidget* window_new(GtkApplication* app, gpointer data) {
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
 	gtk_container_add(GTK_CONTAINER(window), vbox);
 
-	text_view = gtk_text_view_new();
-	gtk_box_pack_start(GTK_BOX(vbox), text_view, 1, 1, 0);
+	source_view = gtk_source_view_new();
+	gtk_box_pack_start(GTK_BOX(vbox), source_view, 1, 1, 0);
 
-	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
-	gtk_text_buffer_set_text(buffer, "Hello.  I am an example.", -1);
+	buffer = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(source_view)));
+	gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), "Hello.  I am an example.", -1);
 
 	return window;
 }
