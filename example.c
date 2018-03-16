@@ -1,13 +1,18 @@
 #include <gtk/gtk.h>
 
-static void app_activated(GtkApplication* app, gpointer data) {
+static GtkWidget* window_new(GtkApplication* app, gpointer data) {
 	GtkWidget* window;
 
 	window = gtk_application_window_new(app);
 
-	gtk_window_set_title(GTK_WINDOW(window), "Window");
+	gtk_window_set_title(GTK_WINDOW(window), "Example");
 	gtk_window_set_default_size(GTK_WINDOW(window), 200, 200);
-	gtk_widget_show_all(window);
+
+	return window;
+}
+
+static void app_activated(GtkApplication* app, gpointer data) {
+	gtk_widget_show_all(window_new(app, data));
 }
 
 int main(int argc, char** argv) {
