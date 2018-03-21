@@ -4,6 +4,6 @@
 #include <gtk/gtk.h>
 #include <gtksourceview/gtksource.h>
 
-GtkSourceLanguage* source_language_for_mime_type(const gchar* mime);
+GtkSourceLanguage* source_language_for_mime_type(const gchar*);
 
 #endif
