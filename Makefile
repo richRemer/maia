@@ -4,11 +4,11 @@ LIBS=`pkg-config --libs gtk+-3.0 gtksourceview-3.0`
 
 default: dist/maia
 
-build/maia.o: maia.c $(HEADERS)
-	gcc $(CFLAGS) -c maia.c -o build/maia.o
+build/%.o: %.c
+	gcc $(CFLAGS) -c -o $@ $< $(CFLAGS)
 
-dist/maia: build/maia.o
-	gcc $(CFLAGS) build/maia.o $(LIBS) -o dist/maia
+dist/maia: build/maia.o build/mime.o
+	gcc $(CFLAGS) build/maia.o build/mime.o $(LIBS) -o dist/maia
 
 clean:
 	-rm -f build/*

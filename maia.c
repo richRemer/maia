@@ -1,35 +1,12 @@
 #include <gtk/gtk.h>
 #include <gtksourceview/gtksource.h>
-
-static GtkSourceLanguage* source_language_for_mime_type(GtkSourceLanguageManager* lang_mgr, const gchar* mime) {
-	GtkSourceLanguage* lang;
-	const gchar* const* ids;
-	const gchar* const* id;
-	gchar** types;
-	gchar** type;
-
-	id = ids = gtk_source_language_manager_get_language_ids(lang_mgr);
-
-	for (; *id != NULL; id++) {
-		lang = gtk_source_language_manager_get_language(lang_mgr, *id);
-		type = types = gtk_source_language_get_mime_types(lang);
-
-		if (types != NULL) for (; *type != NULL; type++) {
-			if (0 == g_strcmp0(mime, *type)) {
-				return lang;
-			}
-		}
-	}
-
-	return NULL;
-}
+#include "mime.h"
 
 static GtkWidget* window_new(GtkApplication* app, gpointer data) {
 	GtkWidget* window;
 	GtkWidget* vbox;
 	GtkWidget* source_view;
 	GtkSourceBuffer* buffer;
-	GtkSourceLanguageManager* lang_mgr;
 	GtkSourceLanguage* lang;
 	PangoFontDescription* font;
 
@@ -40,8 +17,7 @@ static GtkWidget* window_new(GtkApplication* app, gpointer data) {
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
 	gtk_container_add(GTK_CONTAINER(window), vbox);
 
-	lang_mgr = gtk_source_language_manager_get_default();
-	lang = source_language_for_mime_type(lang_mgr, "application/javascript");
+	lang = source_language_for_mime_type("application/javascript");
 	buffer = lang == NULL
 		? gtk_source_buffer_new(NULL)
 		: gtk_source_buffer_new_with_language(lang);
