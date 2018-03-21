@@ -10,13 +10,15 @@ void enable_styles(const gchar* path) {
 	gtk_css_provider_load_from_path(GTK_CSS_PROVIDER(provider), path, NULL);
 }
 
-GtkWidget* new_document_window(GtkApplication* app, const gchar* mime) {
+GtkWidget* new_document_window(GtkApplication* app, const gchar* mime, const gchar* scheme_id) {
 	GtkWidget* window;
 	GtkWidget* vbox;
 	GtkWidget* source_view;
 	GtkSourceBuffer* buffer;
 	GtkSourceLanguage* lang;
 	GtkStyleContext* style;
+	GtkSourceStyleSchemeManager* scheme_mgr;
+	GtkSourceStyleScheme* scheme;
 
 	window = gtk_application_window_new(app);
 	gtk_window_set_title(GTK_WINDOW(window), "Example");
@@ -30,6 +32,15 @@ GtkWidget* new_document_window(GtkApplication* app, const gchar* mime) {
 		? gtk_source_buffer_new(NULL)
 		: gtk_source_buffer_new_with_language(lang);
 	gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), "// example", -1);
+
+	if (scheme_id != NULL) {
+		scheme_mgr = gtk_source_style_scheme_manager_get_default();
+		scheme = gtk_source_style_scheme_manager_get_scheme(scheme_mgr, scheme_id);
+
+		if (scheme != NULL) {
+			gtk_source_buffer_set_style_scheme(buffer, scheme);
+		}
+	}
 
 	source_view = gtk_source_view_new_with_buffer(buffer);
 	gtk_source_view_set_tab_width(GTK_SOURCE_VIEW(source_view), 4);

@@ -1,9 +1,11 @@
 #include <gtk/gtk.h>
 #include <gtksourceview/gtksource.h>
+#include <stdlib.h>
 #include "ui.h"
 
 static void app_activated(GtkApplication* app, gpointer data) {
-	gtk_widget_show_all(new_document_window(app, "application/javascript"));
+	const char* theme = getenv("MAIA_THEME");
+	gtk_widget_show_all(new_document_window(app, "application/javascript", theme));
 }
 
 int main(int argc, char** argv) {
