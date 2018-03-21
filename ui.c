@@ -1,13 +1,22 @@
 #include "ui.h"
 #include "mime.h"
 
+void enable_styles(const gchar* path) {
+	GtkCssProvider* provider = gtk_css_provider_new();
+	GdkDisplay* display = gdk_display_get_default();
+	GdkScreen* screen = gdk_display_get_default_screen(display);
+
+	gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+	gtk_css_provider_load_from_path(GTK_CSS_PROVIDER(provider), path, NULL);
+}
+
 GtkWidget* new_document_window(GtkApplication* app, const gchar* mime) {
 	GtkWidget* window;
 	GtkWidget* vbox;
 	GtkWidget* source_view;
 	GtkSourceBuffer* buffer;
 	GtkSourceLanguage* lang;
-	PangoFontDescription* font;
+	GtkStyleContext* style;
 
 	window = gtk_application_window_new(app);
 	gtk_window_set_title(GTK_WINDOW(window), "Example");
@@ -23,11 +32,12 @@ GtkWidget* new_document_window(GtkApplication* app, const gchar* mime) {
 	gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), "// example", -1);
 
 	source_view = gtk_source_view_new_with_buffer(buffer);
+	gtk_source_view_set_tab_width(GTK_SOURCE_VIEW(source_view), 4);
+	gtk_source_view_set_insert_spaces_instead_of_tabs(GTK_SOURCE_VIEW(source_view), TRUE);
 	gtk_box_pack_start(GTK_BOX(vbox), source_view, 1, 1, 0);
 
-	font = pango_font_description_from_string("mono 12");
-	gtk_widget_override_font(source_view, font);
-	pango_font_description_free(font);
+	style = gtk_widget_get_style_context(source_view);
+	gtk_style_context_add_class(style, "source");
 
 	return window;
 }
