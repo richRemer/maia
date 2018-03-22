@@ -6,7 +6,7 @@
 
 static void app_activated(GtkApplication* app, gpointer data) {
 	const char* theme = getenv("MAIA_THEME");
-	gtk_widget_show_all(new_document_window(app, "application/javascript", theme));
+	gtk_widget_show_all(new_empty_document(app, "application/javascript", theme));
 }
 
 int main(int argc, char** argv) {

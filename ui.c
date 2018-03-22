@@ -10,7 +10,7 @@ void enable_styles(const gchar* path) {
 	gtk_css_provider_load_from_path(GTK_CSS_PROVIDER(provider), path, NULL);
 }
 
-GtkWidget* new_document_window(GtkApplication* app, const gchar* mime, const gchar* scheme_id) {
+GtkWidget* new_empty_document(GtkApplication* app, const gchar* mime, const gchar* scheme_id) {
 	GtkWidget* window;
 	GtkWidget* vbox;
 	GtkWidget* source_view;

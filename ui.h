@@ -4,6 +4,6 @@
 #include <gtk/gtk.h>
 
 void enable_styles(const gchar*);
-GtkWidget* new_document_window(GtkApplication*, const gchar*, const gchar*);
+GtkWidget* new_empty_document(GtkApplication*, const gchar*, const gchar*);
 
 #endif
