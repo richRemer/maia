@@ -1,7 +1,8 @@
+#include "ui.h"
+
 #include <gtk/gtk.h>
 #include <gtksourceview/gtksource.h>
 #include <stdlib.h>
-#include "ui.h"
 
 static void app_activated(GtkApplication* app, gpointer data) {
 	const char* theme = getenv("MAIA_THEME");
