@@ -12,7 +12,7 @@ static void app_activated(GtkApplication* app, gpointer data) {
 	gtk_widget_show_all(new_empty_document(app, "application/javascript", theme));
 }
 
-int chdir_bin(const char* bin) {
+void chdir_bin(const char* bin) {
 	char* bin_path = malloc(strlen(bin) + 1);
 	strcpy(bin_path, bin);
 	chdir(dirname(bin_path));
