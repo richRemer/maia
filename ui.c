@@ -5,7 +5,7 @@ static GdkPixbuf* open_image(const gchar* file) {
 	GdkPixbuf* pixbuf;
 	GError* error = NULL;
 
-	pixbuf = gdk_pixbuf_new_from_file("maia.svg", &error);
+	pixbuf = gdk_pixbuf_new_from_file(file, &error);
 
 	if (!pixbuf) {
 		fprintf(stderr, "%s\n", error->message);
