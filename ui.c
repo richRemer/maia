@@ -24,11 +24,31 @@ void enable_styles(const gchar* path) {
 	gtk_css_provider_load_from_path(GTK_CSS_PROVIDER(provider), path, NULL);
 }
 
-GtkWidget* new_empty_document(GtkApplication* app, const gchar* mime, const gchar* scheme_id) {
+GtkWidget* new_open_button() {
+	GtkWidget* button;
+
+	button = gtk_button_new();
+	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_file("folder-open.svg"));
+
+	return button;
+}
+
+GtkWidget* new_toolbar(GtkWidget* const* buttons) {
+	GtkWidget* toolbar;
+	GtkWidget* const* button = buttons;
+
+	toolbar = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
+
+	if (*button != NULL) {
+		gtk_container_add(GTK_CONTAINER(toolbar), GTK_WIDGET(*button));
+	}
+
+	return toolbar;
+}
+
+GtkWidget* new_empty_document(GtkApplication* app, GtkWidget* toolbar, const gchar* mime, const gchar* scheme_id) {
 	GtkWidget* window;
 	GtkWidget* vbox;
-	GtkWidget* buttons;
-	GtkWidget* button;
 	GtkWidget* source_view;
 	GtkSourceBuffer* buffer;
 	GtkSourceLanguage* lang;
@@ -43,14 +63,7 @@ GtkWidget* new_empty_document(GtkApplication* app, const gchar* mime, const gcha
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
 	gtk_container_add(GTK_CONTAINER(window), vbox);
-
-	buttons = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
-	gtk_box_pack_start(GTK_BOX(vbox), buttons, 0, 0, 0);
-
-	button = gtk_button_new();
-	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_file("folder-open.svg"));
-	gtk_container_add(GTK_CONTAINER(buttons), button);
-	g_signal_connect_swapped(button, "clicked", G_CALLBACK(gtk_widget_destroy), window);
+	gtk_box_pack_start(GTK_BOX(vbox), toolbar, 0, 0, 0);
 
 	lang = source_language_for_mime_type(mime);
 	buffer = lang == NULL

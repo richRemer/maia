@@ -9,7 +9,19 @@
 
 static void app_activated(GtkApplication* app, gpointer data) {
 	const char* theme = getenv("MAIA_THEME");
-	gtk_widget_show_all(new_empty_document(app, "application/javascript", theme));
+	const GtkWidget* buttons[1];
+	GtkWidget* open_button;
+	GtkWidget* toolbar;
+	GtkWidget* window;
+
+	open_button = new_open_button();
+	buttons[0] = open_button;
+	toolbar = new_toolbar(buttons);
+	window = new_empty_document(app, toolbar, "application/javascript", theme);
+
+	g_signal_connect_swapped(open_button, "clicked", G_CALLBACK(gtk_widget_destroy), window);
+
+	gtk_widget_show_all(window);
 }
 
 void chdir_bin(const char* bin) {
