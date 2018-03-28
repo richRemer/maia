@@ -9,7 +9,7 @@
 
 static void app_activated(GtkApplication* app, gpointer data) {
 	const char* theme = getenv("MAIA_THEME");
-	const GtkWidget* buttons[1];
+	GtkWidget* buttons[1];
 	GtkWidget* open_button;
 	GtkWidget* toolbar;
 	GtkWidget* window;
