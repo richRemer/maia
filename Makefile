@@ -10,10 +10,13 @@ default: dist/maia
 build/%.o: %.c
 	gcc $(CFLAGS) -c -o $@ $< $(CFLAGS)
 
-dist/maia: $(OBJ) dist/maia.css
+dist/maia: $(OBJ) dist/maia.css dist/maia.svg
 	gcc $(CFLAGS) $(OBJ) $(LIBS) -o $@
 
 dist/maia.css: style/maia.css
+	cp $< $@
+
+dist/maia.svg: style/maia.svg
 	cp $< $@
 
 .PHONY: clean

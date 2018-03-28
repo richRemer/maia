@@ -1,6 +1,20 @@
 #include "ui.h"
 #include "mime.h"
 
+static GdkPixbuf* open_image(const gchar* file) {
+	GdkPixbuf* pixbuf;
+	GError* error = NULL;
+
+	pixbuf = gdk_pixbuf_new_from_file("maia.svg", &error);
+
+	if (!pixbuf) {
+		fprintf(stderr, "%s\n", error->message);
+		g_error_free(error);
+	}
+
+	return pixbuf;
+}
+
 void enable_styles(const gchar* path) {
 	GtkCssProvider* provider = gtk_css_provider_new();
 	GdkDisplay* display = gdk_display_get_default();
@@ -23,6 +37,7 @@ GtkWidget* new_empty_document(GtkApplication* app, const gchar* mime, const gcha
 	window = gtk_application_window_new(app);
 	gtk_window_set_title(GTK_WINDOW(window), "Example");
 	gtk_window_set_default_size(GTK_WINDOW(window), 200, 200);
+	gtk_window_set_icon(GTK_WINDOW(window), open_image("maia.svg"));
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
 	gtk_container_add(GTK_CONTAINER(window), vbox);
