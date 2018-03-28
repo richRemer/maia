@@ -13,11 +13,13 @@ static void app_activated(GtkApplication* app, gpointer data) {
 	GtkWidget* open_button;
 	GtkWidget* toolbar;
 	GtkWidget* window;
+	GtkSourceBuffer* buffer;
 
 	open_button = new_open_button();
 	buttons[0] = open_button;
 	toolbar = new_toolbar(buttons);
-	window = new_empty_document(app, toolbar, "application/javascript", theme);
+	buffer = new_buffer("application/javascript");
+	window = new_empty_document(app, toolbar, buffer, theme);
 
 	g_signal_connect_swapped(open_button, "clicked", G_CALLBACK(gtk_widget_destroy), window);
 

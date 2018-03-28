@@ -52,11 +52,10 @@ GtkWidget* new_toolbar(GtkWidget* const* buttons) {
 	return toolbar;
 }
 
-GtkWidget* new_empty_document(GtkApplication* app, GtkWidget* toolbar, const gchar* mime, const gchar* scheme_id) {
+GtkWidget* new_empty_document(GtkApplication* app, GtkWidget* toolbar, GtkSourceBuffer* buffer, const gchar* scheme_id) {
 	GtkWidget* window;
 	GtkWidget* vbox;
 	GtkWidget* source_view;
-	GtkSourceBuffer* buffer;
 	GtkSourceLanguage* lang;
 	GtkStyleContext* style;
 	GtkSourceStyleSchemeManager* scheme_mgr;
@@ -71,12 +70,6 @@ GtkWidget* new_empty_document(GtkApplication* app, GtkWidget* toolbar, const gch
 	gtk_container_add(GTK_CONTAINER(window), vbox);
 	gtk_box_set_spacing(GTK_BOX(vbox), 0);
 	gtk_box_pack_start(GTK_BOX(vbox), toolbar, 0, 0, 0);
-
-	lang = source_language_for_mime_type(mime);
-	buffer = lang == NULL
-		? gtk_source_buffer_new(NULL)
-		: gtk_source_buffer_new_with_language(lang);
-	gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), "// example", -1);
 
 	if (scheme_id != NULL) {
 		scheme_mgr = gtk_source_style_scheme_manager_get_default();
@@ -96,4 +89,17 @@ GtkWidget* new_empty_document(GtkApplication* app, GtkWidget* toolbar, const gch
 	gtk_style_context_add_class(style, "source");
 
 	return window;
+}
+
+GtkSourceBuffer* new_buffer(const gchar* mime) {
+	GtkSourceBuffer* buffer;
+	GtkSourceLanguage* lang;
+
+	lang = source_language_for_mime_type(mime);
+	buffer = lang == NULL
+		? gtk_source_buffer_new(NULL)
+		: gtk_source_buffer_new_with_language(lang);
+	gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), "// example", -1);
+
+	return buffer;
 }
