@@ -36,11 +36,17 @@ GtkWidget* new_open_button() {
 GtkWidget* new_toolbar(GtkWidget* const* buttons) {
 	GtkWidget* toolbar;
 	GtkWidget* const* button = buttons;
+	GtkStyleContext* style;
 
 	toolbar = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
+	gtk_button_box_set_layout(GTK_BUTTON_BOX(toolbar), GTK_BUTTONBOX_START);
+
+	style = gtk_widget_get_style_context(toolbar);
+	gtk_style_context_add_class(style, "toolbar");
 
 	if (*button != NULL) {
 		gtk_container_add(GTK_CONTAINER(toolbar), GTK_WIDGET(*button));
+		gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(toolbar), GTK_WIDGET(*button), TRUE);
 	}
 
 	return toolbar;
@@ -63,6 +69,7 @@ GtkWidget* new_empty_document(GtkApplication* app, GtkWidget* toolbar, const gch
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
 	gtk_container_add(GTK_CONTAINER(window), vbox);
+	gtk_box_set_spacing(GTK_BOX(vbox), 0);
 	gtk_box_pack_start(GTK_BOX(vbox), toolbar, 0, 0, 0);
 
 	lang = source_language_for_mime_type(mime);

@@ -1,4 +1,15 @@
+/* Maia defined */
 .source {
     font-family: monospace;
     font-size: 18px;
+}
+
+/* Maia defined */
+.toolbar {
+	padding: 2px;
+}
+
+/* GTK defined */
+.image-button {
+	padding: 2px;
 }
