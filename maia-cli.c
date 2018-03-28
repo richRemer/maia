@@ -7,6 +7,29 @@
 #include <gtksourceview/gtksource.h>
 #include <stdlib.h>
 
+static void open_button_clicked(GtkButton* button, gpointer data) {
+	GtkWindow* window = data;
+	GtkWidget* dialog;
+	gint res;
+
+	dialog = gtk_file_chooser_dialog_new(
+		"Open File", window, GTK_FILE_CHOOSER_ACTION_OPEN,
+		"_Cancel", GTK_RESPONSE_CANCEL,
+		"_Open", GTK_RESPONSE_ACCEPT,
+		NULL);
+
+	res = gtk_dialog_run(GTK_DIALOG(dialog));
+
+	if (res == GTK_RESPONSE_ACCEPT) {
+		char* filename;
+		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+		printf("file: %s\n", filename);
+		g_free(filename);
+	}
+
+	gtk_widget_destroy(dialog);
+}
+
 static void app_activated(GtkApplication* app, gpointer data) {
 	const char* theme = getenv("MAIA_THEME");
 	GtkWidget* buttons[1];
@@ -21,7 +44,7 @@ static void app_activated(GtkApplication* app, gpointer data) {
 	buffer = new_buffer("application/javascript");
 	window = new_empty_document(app, toolbar, buffer, theme);
 
-	g_signal_connect_swapped(open_button, "clicked", G_CALLBACK(gtk_widget_destroy), window);
+	g_signal_connect(open_button, "clicked", G_CALLBACK(open_button_clicked), window);
 
 	gtk_widget_show_all(window);
 }
