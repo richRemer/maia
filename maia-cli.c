@@ -36,7 +36,9 @@ static void open_button_clicked(GtkButton* button, gpointer data) {
 		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 
 		if (g_file_get_contents(filename, &contents, NULL, &error)) {
+			gtk_source_buffer_begin_not_undoable_action(buffer);
 			gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), contents, -1);
+			gtk_source_buffer_end_not_undoable_action(buffer);
 			g_free(contents);
 		} else {
 			fprintf(stderr, "%s\n", error->message);
