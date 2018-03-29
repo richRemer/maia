@@ -8,12 +8,20 @@
 #include <stdlib.h>
 
 static void open_button_clicked(GtkButton* button, gpointer data) {
-	GtkWindow* window = data;
+	GtkSourceBuffer* buffer = data;
+	GtkWidget* window;
 	GtkWidget* dialog;
 	gint res;
 
+	window = gtk_widget_get_toplevel(GTK_WIDGET(button));
+
+	if (!GTK_IS_WINDOW(window)) {
+		fprintf(stderr, "cannot find top-level window\n");
+		return;
+	}
+
 	dialog = gtk_file_chooser_dialog_new(
-		"Open File", window, GTK_FILE_CHOOSER_ACTION_OPEN,
+		"Open File", GTK_WINDOW(window), GTK_FILE_CHOOSER_ACTION_OPEN,
 		"_Cancel", GTK_RESPONSE_CANCEL,
 		"_Open", GTK_RESPONSE_ACCEPT,
 		NULL);
@@ -22,8 +30,19 @@ static void open_button_clicked(GtkButton* button, gpointer data) {
 
 	if (res == GTK_RESPONSE_ACCEPT) {
 		char* filename;
+		gchar* contents;
+		GError* error = NULL;
+
 		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-		printf("file: %s\n", filename);
+
+		if (g_file_get_contents(filename, &contents, NULL, &error)) {
+			gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), contents, -1);
+			g_free(contents);
+		} else {
+			fprintf(stderr, "%s\n", error->message);
+			g_error_free(error);
+		}
+
 		g_free(filename);
 	}
 
@@ -44,7 +63,7 @@ static void app_activated(GtkApplication* app, gpointer data) {
 	buffer = new_buffer("application/javascript");
 	window = new_empty_document(app, toolbar, buffer, theme);
 
-	g_signal_connect(open_button, "clicked", G_CALLBACK(open_button_clicked), window);
+	g_signal_connect(open_button, "clicked", G_CALLBACK(open_button_clicked), buffer);
 
 	gtk_widget_show_all(window);
 }
