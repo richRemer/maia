@@ -5,7 +5,7 @@ SRC=$(wildcard *.c)
 OBJ=$(patsubst %.c, $(BUILD)/%.o, $(SRC))
 ASSETS=$(patsubst style/%, dist/%, $(wildcard style/*))
 
-default: debug
+default: dist/maia
 
 build/%.o: %.c
 	gcc $(CFLAGS) -c -o $@ $< $(CFLAGS)
@@ -19,12 +19,11 @@ dist/%.svg: style/%.svg
 dist/maia: $(OBJ)
 	gcc $(CFLAGS) $(OBJ) $(LIBS) -o $@
 
+.PHONY: all
 .PHONY: clean
-.PHONY: debug
+
+all: dist/maia $(ASSETS)
 
 clean:
 	-rm -f build/*
 	-rm -f dist/*
-
-debug: dist/maia $(ASSETS)
-	-MAIA_THEME=vsdark dist/maia
